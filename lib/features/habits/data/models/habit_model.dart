@@ -1,3 +1,5 @@
+import 'package:tdd_tutorial/features/habits/domain/entities/habit.dart';
+
 import '../../../../core/database/tables/habits_table.dart';
 
 class HabitModel {
@@ -27,5 +29,17 @@ class HabitModel {
       habitsTableTitle: title,
       habitsTableCreatedAt: createdAt.toIso8601String(),
     };
+  }
+
+  Habit toEntity() {
+    return Habit(id: id, title: title, createdAt: createdAt);
+  }
+
+  factory HabitModel.fromEntity(Habit habit) {
+    return HabitModel(
+      id: habit.id,
+      title: habit.title,
+      createdAt: habit.createdAt,
+    );
   }
 }
