@@ -26,6 +26,12 @@ class _HabitsFormDialogState extends State<HabitsFormDialog> {
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text('Novo Hábito'),
