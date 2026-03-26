@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tdd_tutorial/features/habits/presentation/cubit/habits_cubit.dart';
 import 'package:tdd_tutorial/features/habits/presentation/cubit/habits_state.dart';
+import 'package:tdd_tutorial/features/habits/presentation/widgets/empty_habit_view_widget.dart';
+import 'package:tdd_tutorial/features/habits/presentation/widgets/error_habit_view_widget.dart';
 import 'package:tdd_tutorial/features/habits/presentation/widgets/habits_form_dialog.dart';
 import 'package:tdd_tutorial/features/habits/presentation/widgets/list_habits_widget.dart';
 
 import '../../../../core/di/injector_container.dart';
+import '../widgets/loading_habits_view_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -32,13 +35,16 @@ class _HomePageState extends State<HomePage> {
         bloc: habitsCubit,
         builder: (context, state) {
           if (state is HabitsLoading) {
-            return Center(child: CircularProgressIndicator());
+            return LoadingHabitsViewWidget();
           }
           if (state is HabitsLoaded) {
+            if (state.habits.isEmpty) {
+              return EmptyHabitViewWidget();
+            }
             return ListHabitsWidget(habits: state.habits);
           }
           if (state is HabitsError) {
-            return Center(child: Text(state.error));
+            return ErrorHabitViewWidget(error: state.error);
           }
           return SizedBox.shrink();
         },
