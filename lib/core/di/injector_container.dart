@@ -7,6 +7,7 @@ import 'package:tdd_tutorial/features/habits/domain/usecases/delete_habit_usecas
 import 'package:tdd_tutorial/features/habits/domain/usecases/get_habit_usecase.dart';
 import 'package:tdd_tutorial/features/habits/domain/usecases/insert_habit_usecase.dart';
 import 'package:tdd_tutorial/features/habits/domain/usecases/update_habit_usecase.dart';
+import 'package:tdd_tutorial/features/habits/presentation/cubit/delete_habit_cubit.dart';
 import 'package:tdd_tutorial/features/habits/presentation/cubit/habits_cubit.dart';
 
 final sl = GetIt.instance;
@@ -28,4 +29,6 @@ Future<void> initDependencies() async {
 
   // Cubits
   sl.registerLazySingleton(() => HabitsCubit(sl(), sl(), sl(), sl()));
+
+  sl.registerLazySingleton(() => DeleteHabitCubit(sl()));
 }

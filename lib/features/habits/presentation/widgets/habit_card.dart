@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:tdd_tutorial/features/habits/presentation/cubit/habits_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tdd_tutorial/features/habits/presentation/cubit/delete_habit_state.dart';
 
 import '../../../../core/di/injector_container.dart';
 import '../../domain/entities/habit.dart';
+import '../cubit/delete_habit_cubit.dart';
 
 class HabitCard extends StatelessWidget {
   const HabitCard({super.key, required this.habit});
@@ -11,7 +13,7 @@ class HabitCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = sl<HabitsCubit>();
+    final cubit = sl<DeleteHabitCubit>();
     return Card(
       child: ListTile(
         title: Text(habit.title),
@@ -21,7 +23,16 @@ class HabitCard extends StatelessWidget {
               onPressed: () {
                 cubit.deleteHabit(habit.id);
               },
-              icon: Icon(Icons.delete),
+              icon: BlocBuilder<DeleteHabitCubit, DeleteHabitState>(
+                bloc: cubit,
+                builder: (context, state) {
+                  if (state is DeletingHabitState &&
+                      state.deleteId == habit.id) {
+                    return CircularProgressIndicator();
+                  }
+                  return Icon(Icons.delete);
+                },
+              ),
             ),
           ],
         ),

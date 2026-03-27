@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tdd_tutorial/features/habits/presentation/cubit/delete_habit_state.dart';
 import 'package:tdd_tutorial/features/habits/presentation/cubit/habits_cubit.dart';
 import 'package:tdd_tutorial/features/habits/presentation/cubit/habits_state.dart';
 import 'package:tdd_tutorial/features/habits/presentation/widgets/empty_habit_view_widget.dart';
@@ -8,6 +11,7 @@ import 'package:tdd_tutorial/features/habits/presentation/widgets/habits_form_di
 import 'package:tdd_tutorial/features/habits/presentation/widgets/list_habits_widget.dart';
 
 import '../../../../core/di/injector_container.dart';
+import '../cubit/delete_habit_cubit.dart';
 import '../widgets/loading_habits_view_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,12 +23,26 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final habitsCubit = sl<HabitsCubit>();
+  final deleteCubit = sl<DeleteHabitCubit>();
+  late final StreamSubscription _deleteCubitSubscription;
 
   @override
   void initState() {
     super.initState();
 
     habitsCubit.getHabits();
+
+    _deleteCubitSubscription = deleteCubit.stream.listen((state) {
+      if (state is SuccessDeletetingHabitState) {
+        habitsCubit.getHabits();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _deleteCubitSubscription.cancel();
+    super.dispose();
   }
 
   @override
